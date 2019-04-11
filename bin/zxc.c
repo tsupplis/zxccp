@@ -49,6 +49,7 @@ int main(int argc, char **argv)
 
 			if (fname_opt(argv[n], 'i')) continue;
 			if (fname_opt(argv[n], 'o')) continue;
+			if (fname_opt(argv[n], 'e')) continue;
 			if (fname_opt(argv[n], 'm')) continue;
 			if (fname_opt(argv[n], 'h')) continue;
 			if (fname_opt(argv[n], 'g')) continue;
