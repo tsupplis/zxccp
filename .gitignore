@@ -2,6 +2,11 @@ mac-config
 dos-config
 **/.*.swp
 **/*.exe
+**/Makefile
+**/.deps
+**/stamp-h1
+**/libtool
+**/config.h
 **/*.o
 config.log
 config.status
