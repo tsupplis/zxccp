@@ -1,0 +1,5 @@
+mac-config
+dos-config
+**/.*.swp
+**/*.exe
+**/*.o
