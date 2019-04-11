@@ -3,3 +3,5 @@ dos-config
 **/.*.swp
 **/*.exe
 **/*.o
+config.log
+config.status
