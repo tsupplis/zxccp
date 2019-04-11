@@ -89,5 +89,5 @@ then
 fi
 LIBS="-lcpmredir $LIBS"
 
-AC_OUTPUT(Makefile bin/Makefile Z80/Makefile )
+AC_OUTPUT(Makefile bin/Makefile z80/Makefile )
 

@@ -223,7 +223,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 SUBDIRS = . include lib
-EXTRA_DIST = $(srcdir)/config/* $(srcdir)/doc/* $(srcdir)/Z80/*
+EXTRA_DIST = $(srcdir)/config/* $(srcdir)/doc/* $(srcdir)/z80/*
 ACLOCAL_AMFLAGS = -I m4
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive

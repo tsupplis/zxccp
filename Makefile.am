@@ -1,10 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 
 SUBDIRS= . @LSUBDIRS@ z80 bin 
-EXTRA_DIST= $(srcdir)/config/* $(srcdir)/zxcc.doc $(srcdir)/zxcc.html
-pkgdata_DATA = zxcc.doc
+EXTRA_DIST= $(srcdir)/config/* $(srcdir)/zxcc.md 
+pkgdata_DATA = zxcc.md
 
 ACLOCAL_AMFLAGS=-I m4
-
-zxcc.doc:	$(srcdir)/zxcc.html
-	lynx -dump $(srcdir)/zxcc.html > zxcc.doc
