@@ -9,5 +9,6 @@ dos-config
 **/libtool
 **/config.h
 **/*.o
+**/autom4te.cache
 config.log
 config.status
