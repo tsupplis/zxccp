@@ -362,7 +362,7 @@ uninstall-am: uninstall-local
 
 
 bios.bin:	bios.zsm
-	z80asm -fb -l bios.zsm
+	../z80asm/z80asm -fb -l bios.zsm
 
 install-data-local:
 	$(mkinstalldirs) $(DESTDIR)$(libdir)/cpm/bin80
