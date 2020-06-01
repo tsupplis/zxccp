@@ -1,6 +1,6 @@
 2012-08-01 John Elliott
 
-	* zxcc-0.5.7 release.
+	* zxccp-0.5.7 release.
 
 	* Fixed compilation on Mac OS X [Mike Naberezny].
 
@@ -13,7 +13,7 @@
 
 2010-11-10 John Elliott
 
-	* zxcc-0.5.6 release.
+	* zxccp-0.5.6 release.
 
 	* Fixed the implementation of the BIOS traps. Console I/O using
 	 BIOS functions should now work.
@@ -26,20 +26,20 @@
 
 2009-11-03 John Elliott
 
-	* zxcc-0.5.4 release.
+	* zxccp-0.5.4 release.
 
 	* Fixed a couple of string-formatting funnies.
 
 2003-04-04 John Elliott
 
-	* zxcc-0.5.3 release.
+	* zxccp-0.5.3 release.
 
 	* Commented out temporary debugging code from z80.c which should not 
 	  have been there (Andy Parkins).
 	
 2003-03-28 John Elliott
 
-	* zxcc-0.5.2 release.
+	* zxccp-0.5.2 release.
 	
 	* Bug fix: BDOS function 10 now takes pointer to unsigned char, 
 	 so that more than 128 bytes can be input (Andy Parkins).
@@ -53,6 +53,6 @@
 
 2001-07-27 John Elliott
 
-	* zxcc-0.5.0 release.
+	* zxccp-0.5.0 release.
 
 	* First automake/autoconf version.

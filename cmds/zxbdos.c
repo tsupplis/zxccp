@@ -1,4 +1,4 @@
-#include "zxcc.h"
+#include "zxccp.h"
 
 #define BDOS_DEF
 #include "zxbdos.h"
@@ -483,7 +483,7 @@ void cpmbdos(byte *a, byte *b, byte *c, byte *d, byte *e, byte *f,
 		fprintf(stderr,"%s: Unsupported BDOS call %d\n", progname, 
 				(int)(*c));	
 		dump_regs(stderr,*a,*b,*c,*d,*e,*f,*h,*l,*pc,*ix,*iy);
-		zxcc_exit(1);
+		zxccp_exit(1);
 		break;	
 	}
 	
@@ -501,7 +501,7 @@ void cpmbios(byte *a, byte *b, byte *c, byte *d, byte *e, byte *f,
 	switch(func)	/* BIOS function */
 	{
 		case 1:
-		zxcc_exit(zxcc_term());	/* Program termination */
+		zxccp_exit(zxccp_term());	/* Program termination */
 		break;
 
 		case 2:		/* CONST */
@@ -549,8 +549,8 @@ void cpmbios(byte *a, byte *b, byte *c, byte *d, byte *e, byte *f,
 		printf("This program has attempted to call USERF, which "
                        "is not implemented.\n");
 #endif
-		zxcc_term();
-		zxcc_exit(1);
+		zxccp_term();
+		zxccp_exit(1);
 		break;
 
 		default:
@@ -563,6 +563,6 @@ void cpmbios(byte *a, byte *b, byte *c, byte *d, byte *e, byte *f,
 
                 fprintf(stderr,"%s: Unsupported BIOS call %d\n", progname, func);
 		dump_regs(stderr,*a,*b,*c,*d,*e,*f,*h,*l,*pc,*ix,*iy);
-                zxcc_exit(1);
+                zxccp_exit(1);
 	}
 }

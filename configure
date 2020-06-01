@@ -592,7 +592,7 @@ PACKAGE_STRING=
 PACKAGE_BUGREPORT=
 PACKAGE_URL=
 
-ac_unique_file="bin/zxcc.c"
+ac_unique_file="cmds/zxccp.c"
 # Factoring default headers for most tests.
 ac_includes_default="\
 #include <stdio.h>
@@ -2714,7 +2714,7 @@ fi
 
 
 # Define the identity of the package.
- PACKAGE=zxcc
+ PACKAGE=zxccp
  VERSION=$VERSION
 
 
@@ -12181,7 +12181,7 @@ CPPFLAGS="$CPPFLAGS -I$SRCROOT/cpmredir/include"
 LDFLAGS="$LDFLAGS -L$DSTROOT/cpmredir/lib"
 LSUBDIRS="$LSUBDIRS cpmredir"
 
-CPPFLAGS="$CPPFLAGS -DZXCC"
+CPPFLAGS="$CPPFLAGS -DZXCCP"
 
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for ANSI C header files" >&5
@@ -12370,7 +12370,7 @@ then
 fi
 LIBS="-lcpmredir $LIBS"
 
-ac_config_files="$ac_config_files Makefile bin/Makefile z80/Makefile"
+ac_config_files="$ac_config_files Makefile cmds/Makefile z80/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -13374,7 +13374,7 @@ do
     "depfiles") CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
     "libtool") CONFIG_COMMANDS="$CONFIG_COMMANDS libtool" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
-    "bin/Makefile") CONFIG_FILES="$CONFIG_FILES bin/Makefile" ;;
+    "cmds/Makefile") CONFIG_FILES="$CONFIG_FILES cmds/Makefile" ;;
     "z80/Makefile") CONFIG_FILES="$CONFIG_FILES z80/Makefile" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;

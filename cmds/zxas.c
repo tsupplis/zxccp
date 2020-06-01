@@ -1,5 +1,5 @@
 
-#include "zxcc.h"
+#include "zxccp.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -23,7 +23,7 @@ int main(int argc, char **argv)
 {	
 	int n;
 
-	strcpy(cmdbuf,"zxcc link.com ");
+	strcpy(cmdbuf,"zxccp zas.com ");
 	for (n = 1; n < argc; n++)
 	{
 		if (argv[n][0] == '-')	/* An option */
@@ -33,8 +33,7 @@ int main(int argc, char **argv)
 			/* The following options can take filenames */
 
 			if (fname_opt(argv[n], 'o')) continue;
-			if (fname_opt(argv[n], 'm')) continue;
-			if (fname_opt(argv[n], 'd')) continue;
+			if (fname_opt(argv[n], 'l')) continue;
 		}
 		strcat(cmdbuf,argv[n]);
 		strcat(cmdbuf," ");

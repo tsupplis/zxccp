@@ -685,7 +685,7 @@ HLinstr(0x75,7,8);
 endinstr;
 
 instr(0x76,4);
-	/* Was HALT - ZXCC ignores HALT */
+	/* Was HALT - ZXCCP ignores HALT */
 endinstr;
 
 HLinstr(0x77,7,8);

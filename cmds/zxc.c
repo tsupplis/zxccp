@@ -1,5 +1,5 @@
 
-#include "zxcc.h"
+#include "zxccp.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,11 +19,26 @@ int fname_opt(char *arg, char c)
 	return 0;
 }
 
+int cref_opt(char *arg)
+{
+	if ((arg[1] == 'c' || arg[1] == 'C') &&
+            (arg[2] == 'r' || arg[2] == 'r') && arg[3])
+	{
+		strcat(cmdbuf, "-cr +");
+		strcat(cmdbuf, arg + 3);
+		strcat(cmdbuf, " ");
+		return 1;
+	}
+	return 0;
+}
+
+
+
 int main(int argc, char **argv)
 {	
 	int n;
 
-	strcpy(cmdbuf,"zxcc zas.com ");
+	strcpy(cmdbuf,"zxccp c.com --I +" INCDIR80 " " );
 	for (n = 1; n < argc; n++)
 	{
 		if (argv[n][0] == '-')	/* An option */
@@ -32,11 +47,17 @@ int main(int argc, char **argv)
 
 			/* The following options can take filenames */
 
+			if (fname_opt(argv[n], 'i')) continue;
 			if (fname_opt(argv[n], 'o')) continue;
-			if (fname_opt(argv[n], 'l')) continue;
+			if (fname_opt(argv[n], 'e')) continue;
+			if (fname_opt(argv[n], 'm')) continue;
+			if (fname_opt(argv[n], 'h')) continue;
+			if (fname_opt(argv[n], 'g')) continue;
+			if (cref_opt(argv[n])) continue;
 		}
 		strcat(cmdbuf,argv[n]);
 		strcat(cmdbuf," ");
 	}	
+    fprintf(stderr,"%s\n",cmdbuf);
 	return system(cmdbuf);
 }

@@ -1,4 +1,4 @@
-; BIOS / BDOS for the ZXCC environment.
+; BIOS / BDOS for the ZXCCP environment.
 ;
 	org	0FE00h
 	DEFB	'ZXCC04'	;Serial number
@@ -16,7 +16,7 @@ BDOS1:	LD	A,0C0h
 UBIOS:	LD	(XIX),IX
 	POP	IX		;IX = address of UBIOS function
 ;
-; ZXCC was written on the assumption that the BIOS jumpblock was a series 
+; ZXCCP was written on the assumption that the BIOS jumpblock was a series 
 ; of CALL UBIOS instructions; in which case, IX would be the return address,
 ; or the address of the jumpblock entry plus 3.
 ;
@@ -29,13 +29,13 @@ UBIOS:	LD	(XIX),IX
 	ADD	IX,DE
 	POP	DE
 	LD	A,0C3h		;C3h = BIOS call
-	DEFB	0EDh,0FEh	;ZXCC trap; IX = BIOS function
+	DEFB	0EDh,0FEh	;ZXCCP trap; IX = BIOS function
 	LD	IX,(XIX)
 	RET
 ;
 XIX:	DEFW	0
 
-CBOOT:  LD      HL,WBOOT0	;ZXCC cold boot: Initialise the Zero Page.
+CBOOT:  LD      HL,WBOOT0	;ZXCCP cold boot: Initialise the Zero Page.
         LD      (1),HL
         LD      HL,BDOS0
         LD      (6),HL

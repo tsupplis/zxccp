@@ -67,8 +67,8 @@ void cpmbios(byte *a, byte *b, byte *c, byte *d, byte *e, byte *f,
 void dump_regs(FILE *fp, byte a, byte b, byte c, byte d, byte e, byte f, 
              byte h, byte l, word pc, word ix, word iy);
 void Msg(char *s, ...);
-int zxcc_term(void);
-void zxcc_exit(int code);
+int zxccp_term(void);
+void zxccp_exit(int code);
 
 /* Global variables */
 

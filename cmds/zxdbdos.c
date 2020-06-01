@@ -1,4 +1,4 @@
-#include "zxcc.h"
+#include "zxccp.h"
 #include "zxbdos.h"
 #include "zxdbdos.h"
 
@@ -6,7 +6,7 @@
   Now the calls have been moved into libcpmredir, it's a bit empty round
   here. 
 
-   ZXCC does a few odd things when searching, to make Hi-Tech C behave
+   ZXCCP does a few odd things when searching, to make Hi-Tech C behave
    properly.
 */
 
@@ -18,17 +18,24 @@ int fcbforce(byte *fcb, byte *odrv)
 {
 	byte drive;
 	char typ[4];	
+	char nam[9];	
 	int n;
 
-	for (n = 0; n < 3; n++) typ[n] = fcb[n+9] & 0x7F;
+	for (n = 0; n < 8; n++) 
+        nam[n] = fcb[n+1] & 0x7F;
+	nam[8] = 0;
+	for (n = 0; n < 3; n++) 
+        typ[n] = fcb[n+9] & 0x7F;
 	typ[3] = 0;
 
 	drive = 0;
 	if (*fcb) return 0;	/* not using default drive */
-	if (!strcmp(typ, "COM")) drive = 1;
-	if (!strcmp(typ, "LIB")) drive = 2; 
-	if (!strcmp(typ, "OBJ")) drive = 2; 
-	if (!strcmp(typ, "REL")) drive = 2; 
+	if (!strcasecmp(nam,"BCLOAD  ") && !strcasecmp(typ, "   ")) drive = 2;
+	if (!strcasecmp(typ, "COM")) drive = 1;
+	if (!strcasecmp(typ, "OVR")) drive = 1;
+	if (!strcasecmp(typ, "LIB")) drive = 2; 
+	if (!strcasecmp(typ, "OBJ")) drive = 2; 
+	if (!strcasecmp(typ, "REL")) drive = 2; 
 
 	if (!drive) return 0;
 	
@@ -37,7 +44,7 @@ int fcbforce(byte *fcb, byte *odrv)
 	return 1;
 }
 
-/* zxcc has a trick with some filenames: If it can't find them where they
+/* zxccp has a trick with some filenames: If it can't find them where they
        should be, and a drive wasn't specified, it searches BINDIR80, 
        LIBDIR80 or INCDIR80 (depending on the type of the file).
  */

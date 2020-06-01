@@ -84,7 +84,7 @@ void cpm_scr_init(void)
 	{
 		if (cpm_set_terminal(s)) 
 		{
-			fprintf(stderr, "No ZXCC driver for CPMTERM=%s; assuming CPMTERM=%s\r\n",
+			fprintf(stderr, "No ZXCCP driver for CPMTERM=%s; assuming CPMTERM=%s\r\n",
 				s, term_desc[0]);
 			cpm_set_terminal(term_desc[0]);
 		}

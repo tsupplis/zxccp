@@ -34,7 +34,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-bin_PROGRAMS = zxcc$(EXEEXT) zxc$(EXEEXT) zxas$(EXEEXT) \
+bin_PROGRAMS = zxccp$(EXEEXT) zxc$(EXEEXT) zxas$(EXEEXT) \
 	zxlibr$(EXEEXT) zxlink$(EXEEXT)
 subdir = bin
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
@@ -57,10 +57,10 @@ zxas_LDADD = $(LDADD)
 am_zxc_OBJECTS = zxc.$(OBJEXT)
 zxc_OBJECTS = $(am_zxc_OBJECTS)
 zxc_LDADD = $(LDADD)
-am_zxcc_OBJECTS = zxbdos.$(OBJEXT) zxcbdos.$(OBJEXT) zxdbdos.$(OBJEXT) \
-	zxcc.$(OBJEXT) z80.$(OBJEXT)
-zxcc_OBJECTS = $(am_zxcc_OBJECTS)
-zxcc_LDADD = $(LDADD)
+am_zxccp_OBJECTS = zxbdos.$(OBJEXT) zxcbdos.$(OBJEXT) zxdbdos.$(OBJEXT) \
+	zxccp.$(OBJEXT) z80.$(OBJEXT)
+zxccp_OBJECTS = $(am_zxccp_OBJECTS)
+zxccp_LDADD = $(LDADD)
 am_zxlibr_OBJECTS = zxlibr.$(OBJEXT)
 zxlibr_OBJECTS = $(am_zxlibr_OBJECTS)
 zxlibr_LDADD = $(LDADD)
@@ -80,9 +80,9 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SOURCES = $(zxas_SOURCES) $(zxc_SOURCES) $(zxcc_SOURCES) \
+SOURCES = $(zxas_SOURCES) $(zxc_SOURCES) $(zxccp_SOURCES) \
 	$(zxlibr_SOURCES) zxlink.c
-DIST_SOURCES = $(zxas_SOURCES) $(zxc_SOURCES) $(zxcc_SOURCES) \
+DIST_SOURCES = $(zxas_SOURCES) $(zxc_SOURCES) $(zxccp_SOURCES) \
 	$(zxlibr_SOURCES) zxlink.c
 ETAGS = etags
 CTAGS = ctags
@@ -205,9 +205,9 @@ top_srcdir = @top_srcdir@
 zxc_SOURCES = zxc.c
 zxas_SOURCES = zxas.c
 zxlibr_SOURCES = zxlibr.c
-zxcc_SOURCES = zxbdos.c    zxcbdos.c  zxdbdos.c   zxcc.c             \
+zxccp_SOURCES = zxbdos.c    zxcbdos.c  zxdbdos.c   zxccp.c             \
 	     z80.c       z80.h      z80ops.h    cbops.h    edops.h \
-             zxbdos.h    zxcc.h	    zxcbdos.h   zxdbdos.h
+             zxbdos.h    zxccp.h	    zxcbdos.h   zxdbdos.h
 
 all: all-am
 
@@ -292,9 +292,9 @@ zxas$(EXEEXT): $(zxas_OBJECTS) $(zxas_DEPENDENCIES) $(EXTRA_zxas_DEPENDENCIES)
 zxc$(EXEEXT): $(zxc_OBJECTS) $(zxc_DEPENDENCIES) $(EXTRA_zxc_DEPENDENCIES) 
 	@rm -f zxc$(EXEEXT)
 	$(LINK) $(zxc_OBJECTS) $(zxc_LDADD) $(LIBS)
-zxcc$(EXEEXT): $(zxcc_OBJECTS) $(zxcc_DEPENDENCIES) $(EXTRA_zxcc_DEPENDENCIES) 
-	@rm -f zxcc$(EXEEXT)
-	$(LINK) $(zxcc_OBJECTS) $(zxcc_LDADD) $(LIBS)
+zxccp$(EXEEXT): $(zxccp_OBJECTS) $(zxccp_DEPENDENCIES) $(EXTRA_zxccp_DEPENDENCIES) 
+	@rm -f zxccp$(EXEEXT)
+	$(LINK) $(zxccp_OBJECTS) $(zxccp_LDADD) $(LIBS)
 zxlibr$(EXEEXT): $(zxlibr_OBJECTS) $(zxlibr_DEPENDENCIES) $(EXTRA_zxlibr_DEPENDENCIES) 
 	@rm -f zxlibr$(EXEEXT)
 	$(LINK) $(zxlibr_OBJECTS) $(zxlibr_LDADD) $(LIBS)
@@ -313,7 +313,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zxbdos.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zxc.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zxcbdos.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zxcc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zxccp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zxdbdos.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zxlibr.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/zxlink.Po@am__quote@

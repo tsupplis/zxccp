@@ -544,7 +544,7 @@ instr(0xfd,4);
 endinstr;
 */
 
-/* ZXCC pseudo-op */
+/* ZXCCP pseudo-op */
 instr(0xfe, 4);
 {
 	/* Create copies of the registers here so we can take their addresses

@@ -51,7 +51,7 @@
  * We store a "magic number" (0x00FD) in the first two bytes of this field, and
  * if the number has been changed then we abort.
  *
- * nb: Since I wrote ZXCC, I have found that DOSPLUS uses 0x8080 as a magic 
+ * nb: Since I wrote ZXCCP, I have found that DOSPLUS uses 0x8080 as a magic 
  *    number [well, actually this is an oversimplification, but a hypothetical
  *    program written against DOSPLUS would work with 0x8080]. Perhaps 0x8080
  *    should be used instead.

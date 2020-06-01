@@ -1,4 +1,4 @@
-#include "zxcc.h"
+#include "zxccp.h"
 
 /* Global variables */
 
@@ -16,6 +16,9 @@ void load_comfile(void);	/* Forward declaration */
 
 static int deinit_term, deinit_gsx;
 
+char * bin_dir=0;
+char * inc_dir=0;
+char * lib_dir=0;
 
 void dump_regs(FILE *fp, byte a, byte b, byte c, byte d, byte e, byte f,
              byte h, byte l, word pc, word ix, word iy)
@@ -90,8 +93,8 @@ void ed_fe(byte *a, byte *b, byte *c, byte *d, byte *e, byte *f,
 
 		case 0xC2:
 		fprintf(stderr,"%s: Incompatible BIOS.BIN\n", progname);
-		zxcc_term();
-		zxcc_exit(1);
+		zxccp_term();
+		zxccp_exit(1);
 
 		case 0xC3:
 		cpmbios(a,b,c,d,e,f,h,l,pc,ix,iy);
@@ -100,8 +103,8 @@ void ed_fe(byte *a, byte *b, byte *c, byte *d, byte *e, byte *f,
 		default:
 		fprintf(stderr, "%s: Z80 encountered invalid trap\n", progname);
 		dump_regs(stderr,*a,*b,*c,*d,*e,*f,*h,*l,*pc,*ix,*iy);
-		zxcc_term();
-		zxcc_exit(1);
+		zxccp_term();
+		zxccp_exit(1);
 
 	}
 }
@@ -121,16 +124,16 @@ void load_bios(void)
 	if (!fp)
 	{
 		fprintf(stderr,"%s: Cannot locate bios.bin\n", progname);
-		zxcc_term();
-		zxcc_exit(1);
+		zxccp_term();
+		zxccp_exit(1);
 	}
 	bios_len = fread(RAM + 0xFE00, 1, 512, fp);
 	if (bios_len < 1 || ferror(fp))
 	{
 		fclose(fp);
                 fprintf(stderr,"%s: Cannot load bios.bin\n", progname);
-		zxcc_term();
-                zxcc_exit(1);
+		zxccp_term();
+                zxccp_exit(1);
 	}
 	fclose(fp);
 
@@ -183,7 +186,7 @@ void load_comfile(void)
         fp = try_com(fname);
         if (!fp) 
         {
-            strcpy(fname, BINDIR80);
+            strcpy(fname, bin_dir);
             strcat(fname, argv[1]);
             fp = try_com(fname);
         }
@@ -191,16 +194,16 @@ void load_comfile(void)
         {
                 fprintf(stderr,"%s: Cannot locate %s, %s.com, %s.COM, %s.cpm _or_ %s.CPM\r\n", 
                                progname, argv[1], argv[1], argv[1], argv[1], argv[1]);
-		        zxcc_term();
-                zxcc_exit(1);
+		        zxccp_term();
+                zxccp_exit(1);
         }
         com_len = fread(RAM + 0x0100, 1, 0xFD00, fp);
         if (com_len < 1 || ferror(fp))
         {
                 fclose(fp);
                 fprintf(stderr,"%s: Cannot load %s\n", progname, fname);
-		zxcc_term();
-                zxcc_exit(1);
+		        zxccp_term();
+                zxccp_exit(1);
         }
 	fclose(fp);
 	
@@ -220,7 +223,7 @@ unsigned int out() { return 0; }
  * the result to the command line.
  */
 
-void zxcc_xltname(char *name, char *pcmd)
+void zxccp_xltname(char *name, char *pcmd)
 {
 	char nbuf[CPM_MAXPATH + 1];
 
@@ -240,14 +243,45 @@ int main(int ac, char **av)
 {
 	int n;
 	char *pCmd, *str;
-
+    char *altRoot;
 	argc = ac;
 	argv = av;
 #ifdef __PACIFIC__ 		/* Pacific C doesn't support argv[0] */
-	progname="ZXCC";
+	progname="ZXCCP";
 #endif
 	progname = argv[0];
 	
+    bin_dir=BINDIR80;
+    inc_dir=INCDIR80;
+    lib_dir=LIBDIR80;
+
+    altRoot=getenv("ZXCCP_ALT");
+    if(altRoot) {
+        if(strchr(altRoot,'.') || strchr(altRoot,'/') || 
+            strchr(altRoot,'\\') || strlen(altRoot)>8) {
+            fprintf(stderr,
+                "%s: Invalid alt extension (no '/', '.', '\\' and length<9\n", progname);
+            zxccp_exit(1); 
+        }
+        bin_dir=(char*)malloc(strlen(altRoot)+strlen(BINDIR80)+2);
+        strcpy(bin_dir,BINDIR80);
+        strcat(bin_dir,altRoot);
+        strcat(bin_dir,"/");
+        inc_dir=(char*)malloc(strlen(altRoot)+strlen(INCDIR80)+2);
+        strcpy(inc_dir,INCDIR80);
+        strcat(inc_dir,altRoot);
+        strcat(inc_dir,"/");
+        lib_dir=(char*)malloc(strlen(altRoot)+strlen(LIBDIR80)+2);
+        strcpy(lib_dir,LIBDIR80);
+        strcat(lib_dir,altRoot);
+        strcat(lib_dir,"/");
+    }
+    /*
+    fprintf(stderr,"BINDIR80=%s\n",bin_dir);
+    fprintf(stderr,"INCDIR80=%s\n",inc_dir);
+    fprintf(stderr,"LIBDIR80=%s\n",lib_dir);
+    */
+    
 	/* DJGPP includes the whole path in the program name, which looks 
          * untidy...
          */
@@ -258,13 +292,13 @@ int main(int ac, char **av)
 	{
 		fprintf(stderr,"%s: type lengths incorrect; edit typedefs "
                                "and recompile.\n", progname);
-		zxcc_exit(1); 
+		zxccp_exit(1); 
 	}
 
 	if (argc < 2)
 	{
 		fprintf(stderr,"%s: No CP/M program name provided.\n",progname);
-		zxcc_exit(1);
+		zxccp_exit(1);
 	}
 
 	/* Parse arguments. An argument can be either:
@@ -283,12 +317,12 @@ int main(int ac, char **av)
 	if (!fcb_init())
 	{
 		fprintf(stderr, "Could not initialise CPMREDIR library\n");
-		zxcc_exit(1);
+		zxccp_exit(1);
 	}
 
-	xlt_map(0, BINDIR80);	/* Establish the 3 fixed mappings */
-	xlt_map(1, LIBDIR80);
-	xlt_map(2, INCDIR80);
+	xlt_map(0, bin_dir);	/* Establish the 3 fixed mappings */
+	xlt_map(1, lib_dir);
+	xlt_map(2, inc_dir);
 	pCmd = (char *)RAM + 0x81;
 
 	for (n = 2; n < argc; n++)
@@ -306,12 +340,12 @@ int main(int ac, char **av)
 		}
 		else if (argv[n][0] == '+')
 		{
-			zxcc_xltname(pCmd, argv[n]+1);
+			zxccp_xltname(pCmd, argv[n]+1);
 		}
 		else /* Translate a filename */
 		{
 			strcat(pCmd, " ");
-			zxcc_xltname(pCmd, argv[n]);
+			zxccp_xltname(pCmd, argv[n]);
 		}
 
 	}
@@ -366,10 +400,10 @@ int main(int ac, char **av)
 	/* Start the Z80 at 0xFF00, with stack at 0xFE00 */
 	mainloop(0xFF00, 0xFE00);
 
-	return zxcc_term();
+	return zxccp_term();
 }
 
-void zxcc_exit(int code)
+void zxccp_exit(int code)
 {
 #ifdef USE_CPMIO
 	if (deinit_term) cpm_scr_unit();
@@ -380,7 +414,7 @@ void zxcc_exit(int code)
 	exit(code);
 }
 
-int zxcc_term(void)
+int zxccp_term(void)
 {
 	word n;
 
@@ -388,7 +422,7 @@ int zxcc_term(void)
 	n = RAM[0x81];		  /* Get the return code. This is Hi-Tech C */
 	n = (n << 8) | RAM[0x80]; /* specific and fails with other COM files */
 
-	putchar('\n');
+	//putchar('\n');
 
 	if (cpm_error != 0)	/* The CP/M "set return code" call was used */
 	{			/* (my modified Hi-Tech C library uses this */

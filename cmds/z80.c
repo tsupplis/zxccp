@@ -17,7 +17,7 @@
  */
 
 #include<stdio.h>
-#include "zxcc.h"
+#include "zxccp.h"
 
 #define parity(a) (partable[a])
 
@@ -132,7 +132,7 @@ void mainloop(word spc, word ssp){
 #include "z80ops.h"
       }
 /***
- * ZXCC doesn't do interrupts at all, so all this is commented out 
+ * ZXCCP doesn't do interrupts at all, so all this is commented out 
       if(tstates>=int_cycles && intsample){
          tstates-=int_cycles;
          frames++;

@@ -16,14 +16,14 @@
  */
 
 /* [John Elliott, 15 July 2001] 
- * Copied this file into ZXCC, a CP/M emulator.
- * Since ZXCC's memory is a flat 64k space and will never be bank-switched,
+ * Copied this file into ZXCCP, a CP/M emulator.
+ * Since ZXCCP's memory is a flat 64k space and will never be bank-switched,
  * the bank-switching code is removed.
- * Since ZXCC has no memory-mapped screen, all the screen management code
+ * Since ZXCCP has no memory-mapped screen, all the screen management code
  * goes as well.
- * Since ZXCC doesn't need its speed regulated, all the speed regulation
+ * Since ZXCCP doesn't need its speed regulated, all the speed regulation
  * code goes as well.
- * Since ZXCC doesn't save or load snapshots... OK, you get the idea.
+ * Since ZXCCP doesn't save or load snapshots... OK, you get the idea.
  */
 
 #ifdef HAVE_SYS_PARAM_H

@@ -8,7 +8,7 @@ int main(int argc, char **argv)
 {	
 	int n;
 
-	strcpy(cmdbuf,"zxcc libr.com ");
+	strcpy(cmdbuf,"zxccp libr.com ");
 	for (n = 1; n < argc; n++)
 	{
 		if (n == 1)	/* 1st argument is an option */

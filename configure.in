@@ -1,10 +1,10 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT(bin/zxcc.c)
+AC_INIT(cmds/zxccp.c)
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_MACRO_DIR([m4])
 VERSION=0.5.7
 UPDATED='December 28, 2013'
-AM_INIT_AUTOMAKE(zxcc, $VERSION)
+AM_INIT_AUTOMAKE(zxccp, $VERSION)
 AM_CONFIG_HEADER(config.h)
 LT_INIT
 
@@ -51,7 +51,7 @@ LDFLAGS="$LDFLAGS -L$DSTROOT/cpmredir/lib"
 LSUBDIRS="$LSUBDIRS cpmredir"
 
 dnl General preprocessor symbols
-CPPFLAGS="$CPPFLAGS -DZXCC"
+CPPFLAGS="$CPPFLAGS -DZXCCP"
 
 dnl Checks for libraries.
 dnl 
@@ -75,7 +75,7 @@ AC_CHECK_FUNCS(strstr)
 AC_SUBST(LSUBDIRS)
 AC_CONFIG_SUBDIRS($LSUBDIRS)
 
-dnl Location of the ZXCC library directories
+dnl Location of the ZXCCP library directories
 dnl CPPFLAGS="$CPPFLAGS -DLIBROOT=\"$libdir/cpm/\""
 CPPFLAGS="$CPPFLAGS -DBINDIR80=\\\"$libdir/cpm/bin80/\\\""
 CPPFLAGS="$CPPFLAGS -DLIBDIR80=\\\"$libdir/cpm/lib80/\\\""
@@ -89,5 +89,5 @@ then
 fi
 LIBS="-lcpmredir $LIBS"
 
-AC_OUTPUT(Makefile bin/Makefile z80/Makefile )
+AC_OUTPUT(Makefile cmds/Makefile z80/Makefile )
 

@@ -1,6 +1,8 @@
 linux-config
 mac-config
 dos-config
+do_build
+z80/bio.bin
 **/lib*.a
 **/.*.swp
 **/*.exe
