@@ -1,5 +1,5 @@
 
-*ZXCCP v0.5.8-ts*
+*ZXCCP* Adaptation of ZXCC https://www.seasip.info/Unix/Zxcc
 
    zxccp is a wrapper for the Hi-Tech C CP/M compiler, allowing it to be
    used as a cross-compiler under UNIX. Version 0.5.0 also works with the
