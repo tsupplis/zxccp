@@ -48,11 +48,9 @@ int main(int argc, char **argv)
 			/* The following options can take filenames */
 
 			if (fname_opt(argv[n], 'i')) continue;
-			if (fname_opt(argv[n], 'o')) continue;
+			if (fname_opt(argv[n], 'f')) continue;
 			if (fname_opt(argv[n], 'e')) continue;
 			if (fname_opt(argv[n], 'm')) continue;
-			if (fname_opt(argv[n], 'h')) continue;
-			if (fname_opt(argv[n], 'g')) continue;
 			if (cref_opt(argv[n])) continue;
 		}
 		strcat(cmdbuf,argv[n]);
