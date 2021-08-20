@@ -134,7 +134,7 @@ static void update (int n, int c, const unsigned char *s);
 
 /* Under DOS, line input uses the DOS line input */
 #ifdef __MSDOS__
-int cpm_bdos_10(unsigned char *buffer)
+unsigned cpm_bdos_10(unsigned char *buffer)
 {
 	if (!cpmio_using_curses) cpm_scr_unit(); 
 	else 
@@ -155,7 +155,7 @@ int cpm_bdos_10(unsigned char *buffer)
 
 /* If using readline, line input uses it */
 #if USE_READLINE
-int cpm_bdos_10(unsigned char *buffer)
+unsigned cpm_bdos_10(unsigned char *buffer)
 {
 	char *s;
 
@@ -192,7 +192,7 @@ int cpm_bdos_10(unsigned char *buffer)
 #else /* Not using MSDOS or readline */
 /* [reported by Andy Parkins] Make this take unsigned char; on systems 
  * where char is signed, we can end up with a -ve buffer size. */
-int cpm_bdos_10(unsigned char *buffer)
+unsigned cpm_bdos_10(unsigned char *buffer)
 {
 	char c;
 	int maxlen, curlen, curpos, editing, n;
