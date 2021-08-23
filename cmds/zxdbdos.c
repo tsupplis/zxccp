@@ -32,6 +32,7 @@ int fcbforce(byte *fcb, byte *odrv)
 	if (*fcb) return 0;	/* not using default drive */
 	if (!strcasecmp(nam,"BCLOAD  ") && !strcasecmp(typ, "   ")) drive = 2;
 	if (!strcasecmp(typ, "COM")) drive = 1;
+	if (!strcasecmp(typ, "HLP")) drive = 1;
 	if (!strcasecmp(typ, "OVR")) drive = 1;
 	if (!strcasecmp(typ, "LIB")) drive = 2; 
 	if (!strcasecmp(typ, "OBJ")) drive = 2; 

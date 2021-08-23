@@ -61,7 +61,7 @@ void asmerr(int i)
 {
 	if (pass == 1) {
 		fprintf(errfp, "Error in file: %s  Line: %d\n", srcfn, c_line);
-		fprintf(errfp, errmsg[i]);
+		fprintf(errfp, "%s",errmsg[i]);
 		fprintf(errfp, "\n\n");
 	} else
 		errnum = i;

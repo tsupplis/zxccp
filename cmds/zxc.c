@@ -47,11 +47,11 @@ int main(int argc, char **argv)
 
 			/* The following options can take filenames */
 
-			if (fname_opt(argv[n], 'i')) continue;
-			if (fname_opt(argv[n], 'f')) continue;
-			if (fname_opt(argv[n], 'e')) continue;
-			if (fname_opt(argv[n], 'm')) continue;
-			if (cref_opt(argv[n])) continue;
+ 			if (fname_opt(argv[n], 'e')) continue; /* executable */
+ 			if (fname_opt(argv[n], 'f')) continue; /* symbol */
+ 			if (fname_opt(argv[n], 'i')) continue; /* include dir */
+ 			if (fname_opt(argv[n], 'm')) continue; /* map */
+ 			if (cref_opt(argv[n])) continue; /* cross-referencce */
 		}
 		strcat(cmdbuf,argv[n]);
 		strcat(cmdbuf," ");
