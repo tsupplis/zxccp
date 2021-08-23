@@ -281,11 +281,16 @@ instr(0x6f,5);
 endinstr;
 
 instr(0x70,8);
-   {unsigned char x;input(x);}
+   {unsigned char x;
+    input(x);
+    store(hl,x);
+   }
 endinstr;
 
 instr(0x71,8);
-   tstates+=out(tstates,b,c,0);
+   {unsigned char x=fetch(hl);
+    tstates+=out(tstates,b,c,x);
+   }
 endinstr;
 
 instr(0x72,11);
@@ -544,7 +549,7 @@ instr(0xfd,4);
 endinstr;
 */
 
-/* ZXCCP pseudo-op */
+/* ZXCC pseudo-op */
 instr(0xfe, 4);
 {
 	/* Create copies of the registers here so we can take their addresses
