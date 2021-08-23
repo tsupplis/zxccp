@@ -206,3 +206,62 @@ References
    1. http://www.nenie.org/cpcip/index.html#zmac
    2. http://www.hitech.com.au/
    3. http://www.cpm.z80.de/
+
+## Updates
+
+* An apparent error in the source of the CP/M BDOS function 10 (read
+console buffer) emulation - courtesy of @tsupplis from his repository
+at https://github.com/tsupplis/zxccp
+
+* The C compiler (zxc) front-end was not accepting HI-TECH C-style
+command options that require filenames.  It now accepts the following
+
+```
+  -efile.com     CP/M executable file name
+  -ffile.sym     Symbol-table for debugger or overlay creation
+  -idirectory    Include directory (in native format)
+  -mfile.map     Linker map file
+  -crfile.crf    Cross-reference listing
+```
+
+* The linker (zxlink) should use the renamed HI-TECH linker
+(now linq.com).
+
+* Fix compilation warnings
+
+* Emulation of CP/M BDOS function 60 (call resident system extension)
+should be disabled and return 0xFF in both the A and L registers.
+
+* Change cpm_bdos_10() to return an unsigned result to avoid buffer
+size being interpreted as negative.
+
+* Fix the emulation of Z80 opcodes for IN (HL),(C) and OUT (C),(HL) -
+opcodes 0xED,0x70 and 0xED,0x71 respectively.  This
+is noted in Fred Weigel's AM9511 arithmetic processing unit
+emulation from https://github.com/ratboy666/am9511 in the howto.txt
+description.  NB: I have not included Fred's am9511 support at
+this time into ZXCC.
+
+* Russell Marks contributed a fix to the emulation of the Z80 DAA
+(decimal adjust) instruction - based on code from the yaze 1.10
+emulator.  The original code in ZXCC was based on incorrect documentation
+of the DAA instruction in the Zilog and Mostek programming manuals (and
+even in Rodney Zaks "Programming the Z80" book).  The most recent
+documentation from Zilog has the correct description(1).  With this
+fix in-place ZXCC is able to run the Z80 instruction emulator
+test suite ZEXDOC from yaze-ag(2).  You can download a copy of the
+CP/M binary for ZEXDOC from
+https://raw.githubusercontent.com/agn453/ZEXALL/main/zexdoc.com
+
+--
+
+(1) The most recent Zilog Z80 Family CPU User Manual (UM008001-1000)
+can be found at http://www.zilog.com/docs/z80/z80cpu_um.pdf
+
+(2) You'll find the final version of yaze-ag 2.51.1 (as curated by
+Andreas Gerlich) at http://www.mathematik.uni-ulm.de/users/ag/yaze-ag
+
+--
+
+Tony Nicholson 23-Aug-2021
+
