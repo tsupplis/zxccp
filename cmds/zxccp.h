@@ -34,7 +34,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
 #include <errno.h>
 #include <time.h>
 #ifdef __MSDOS
@@ -76,6 +78,7 @@ extern char *progname;
 extern char **argv;
 extern int argc;
 extern byte RAM[65536]; /* The Z80's address space */
+extern int file_conin; /* added to allow <file */
 
 /* Z80 CPU emulation */
 
