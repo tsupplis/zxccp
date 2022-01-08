@@ -41,6 +41,7 @@ static TERMFUNC term_funcs[] = {termios_term, raw_term,  generic_term,
 
 static int filen;
 int file_conin;
+int eof_conin;              /* non zero if eof in stdin */
 
 static struct termios ts, ots;
 
@@ -72,7 +73,7 @@ void cpm_scr_init(void)
 
 	fflush(stdin);
 	filen = fileno(stdin);
-    file_conin = !isatty(filen);
+    file_conin = !isatty(filen); /* non zero if <file is used */
     cpm_waiting = 0;
     terminal = 0;
 	curses_off();
@@ -147,10 +148,10 @@ char termios_conin(void)
 	}
 
 	fflush(stdout);
-	do
-	{
-		i = read(filen, &c, 1);
-	} while (i < 0);
+    if (read(filen, &c, 1) != 1) { /* treat error and eof as eof */
+        eof_conin = 1;
+        c = 0x1A;   /* map to CPM EOF */
+    }
 	return c;
 }
 
@@ -167,6 +168,7 @@ char cpm_const(void)
                 do_refresh = 0;
 		last_refresh = time(NULL);
         }
+    if (file_conin) return termios_const();
 
 	if (cpm_waiting) return 1;
 
@@ -186,9 +188,9 @@ char cpm_conin(void)
 	if (!cpmio_using_curses) { 
         ch=termios_conin();
 #ifdef __APPLE__
-    if(ch==0x7f) {
-        ch=0x08;
-    }
+		if(ch==0x7f) {
+			ch=0x08;
+		}
         return ch;
 #endif
     } else {
@@ -198,7 +200,7 @@ char cpm_conin(void)
             do_refresh = 0;
             last_refresh = time(NULL);
         }
-
+	    if (file_conin) return termios_conin();
         if (cpm_waiting)
         {
             char c = cpm_waiting;

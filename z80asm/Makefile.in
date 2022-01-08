@@ -48,3 +48,6 @@ clean:
 
 install: z80asm
 	echo no deployment
+
+distclean:
+	rm -f Makefile

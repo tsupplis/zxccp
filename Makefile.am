@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS= . @LSUBDIRS@ z80 cmds 
+SUBDIRS= . @LSUBDIRS@ Z80 cmds 
 EXTRA_DIST= $(srcdir)/config/* $(srcdir)/zxccp.md 
 pkgdata_DATA = zxccp.md
 

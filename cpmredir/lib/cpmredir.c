@@ -51,7 +51,7 @@
  * We store a "magic number" (0x00FD) in the first two bytes of this field, and
  * if the number has been changed then we abort.
  *
- * nb: Since I wrote ZXCCP, I have found that DOSPLUS uses 0x8080 as a magic 
+ * nb: Since I wrote ZXCC, I have found that DOSPLUS uses 0x8080 as a magic 
  *    number [well, actually this is an oversimplification, but a hypothetical
  *    program written against DOSPLUS would work with 0x8080]. Perhaps 0x8080
  *    should be used instead.
@@ -195,12 +195,12 @@ cpm_word fcb_close(cpm_byte *fcb)
 
 	if (fcb[5] & 0x80)	/* CP/M 3: Flush rather than close */
 	{
-#ifndef WIN32
+#if !defined(WIN32) || defined(__CYGWIN__)
 		sync();
 #endif
 		return 0;
 	}
-
+    trackFile(NULL, fcb, handle);   /* stop tracking */
 	if (close(handle)) 
 	{
 		redir_Msg("Ret: -1\n");
@@ -354,6 +354,8 @@ cpm_word fcb_creat(cpm_byte *fcb, cpm_byte *dma)
         char fname[CPM_MAXPATH];
         int handle;
 
+        releaseFCB(fcb);    /* release existing fcb usage */
+
 	/* Don't support ambiguous filenames */
         if (redir_fcb2unix(fcb, fname)) return 0x09FF;
         redir_Msg("fcb_creat(\"%s\")\n", fname);
@@ -365,7 +367,7 @@ cpm_word fcb_creat(cpm_byte *fcb, cpm_byte *dma)
 
 	if (fcb[0] & 0x80)
 	{
-#ifdef WIN32
+#if defined(WIN32) && !defined(__CYGWIN__)
 		handle = mkdir(fname);
 #else
 		handle = mkdir(fname, 0x777);
@@ -374,9 +376,11 @@ cpm_word fcb_creat(cpm_byte *fcb, cpm_byte *dma)
 		return 0;
 	}
 
+    releaseFile(fname); /* purge any open handles for this file */
         handle = open(fname, O_RDWR | O_CREAT | O_EXCL | O_BINARY, 
                              S_IREAD | S_IWRITE);
         if (handle < 0 ) return 0xFF;
+        trackFile(fname, fcb, handle);  /* track the new file */
         fcb[MAGIC_OFFSET    ] = 0xFD;   /* "Magic number"  */
         fcb[MAGIC_OFFSET + 1] = 0;
         redir_wrhandle(fcb + HANDLE_OFFSET, handle);
@@ -401,6 +405,7 @@ cpm_word fcb_rename(cpm_byte *fcb, cpm_byte *dma)
         char ofname[CPM_MAXPATH], nfname[CPM_MAXPATH];
 	cpm_byte sdrv, ddrv;
 
+    releaseFCB(fcb);  /* release any file associated with this fcb */
 	redir_log_fcb(fcb);
 
 	/* Don't support ambiguous filenames */
@@ -422,6 +427,9 @@ cpm_word fcb_rename(cpm_byte *fcb, cpm_byte *dma)
 
         redir_Msg("fcb_rename(\"%s\", \"%s\")\n", ofname, nfname);
 
+        /* make sure neither file has open handles */
+        releaseFile(ofname);
+        releaseFile(nfname);
 	if (rename(ofname, nfname))
 	{
 		if (redir_password_error())
@@ -500,34 +508,38 @@ cpm_word fcb_randwr(cpm_byte *fcb, cpm_byte *dma)
 /* Write random with 0 fill */
 cpm_word fcb_randwz(cpm_byte *fcb, cpm_byte *dma)
 {
-	dword offs, len;
-	int handle, rl, rv;
+	dword offs, len, unalloc;
+	int handle;
 	cpm_byte zerorec[128];
 
 	SHOWNAME("fcb_randwz")
 
         if ((handle = redir_verify_fcb(fcb)) < 0) return 9;     /* Invalid FCB */
+        /* Software write-protection */
+        if (redir_ro_fcb(fcb)) return 0x02FF;
+
         offs = redir_rd24(fcb + 0x21) * 128;
 	len  = redir_rd32(fcb + 0x1C);
+#ifdef DEBUG
+	printf("offs:%04x len:%04x\n",offs,len);
+#endif
+	unalloc = (len + 127) / 128 * 128; /* first unallocated block */
+#ifdef DEBUG
+	printf("unalloc:%04x req:%04x\n",unalloc,redir_rec_len);
+#endif
+	if (zxlseek(handle, unalloc, SEEK_SET) < 0) return 6; /* bad record no. */
+    
+	memset(zerorec, 0, 128);
 
-	redir_wr32(fcb + LENGTH_OFFSET, offs);
-
-	memset(zerorec, 0, sizeof(zerorec));
-
-	while (len < offs) 
+	while (unalloc < offs + redir_rec_len)
 	{
-		rl = sizeof(zerorec);
-		if ((offs - len) < sizeof(zerorec)) rl = offs - len;
-		rv = write(handle, zerorec, rl);
-		if (rv >= 0) len += rv;
-	
-		if (rv < rl)
+		if (write(handle, zerorec, 128) < 128)
 		{
-			redir_wr32(fcb + LENGTH_OFFSET, len);
 			return redir_xlt_err();
-		}	
+		}
+		unalloc += 128;
+		redir_wr32(fcb + LENGTH_OFFSET, unalloc);
 	}
-        redir_wr32(fcb + LENGTH_OFFSET, offs);
 
 	return fcb_randwr(fcb, dma);
 }
@@ -624,7 +636,7 @@ cpm_word fcb_trunc(cpm_byte *fcb, cpm_byte *dma)
         if (redir_ro_fcb(fcb)) return 0x02FF;
 
         redir_log_fcb(fcb);
-#ifdef WIN32
+#if defined(WIN32) && !defined(__CYGWIN__)
 	(void)offs;
 	return 0x06FF;	/* Simply not implemented */
 #else
@@ -645,7 +657,7 @@ cpm_word fcb_trunc(cpm_byte *fcb, cpm_byte *dma)
 cpm_word fcb_sdate(cpm_byte *fcb, cpm_byte *dma)
 {
         char fname[CPM_MAXPATH];
-#ifdef WIN32
+#if defined(WIN32) && !defined(__CYGWIN__)
         /* TODO: Use SetFileTime() here */
 
        /* Don't support ambiguous filenames */
@@ -717,7 +729,7 @@ cpm_word fcb_chmod(cpm_byte *fcb, cpm_byte *dma)
 		}
 		return redir_xlt_err();
 	}
-#elif defined (WIN32)
+#elif defined(WIN32) && !defined(__CYGWIN__)
 	omode = 0;
 
         if (fcb[9]    & 0x80)  omode |= FILE_ATTRIBUTE_READONLY;
@@ -746,6 +758,7 @@ cpm_word fcb_chmod(cpm_byte *fcb, cpm_byte *dma)
 	{
 		if (stat(fname, &st)) return redir_xlt_err();
 
+        releaseFile(fname);     /* CPM requires file not be open */
 		handle = open(fname, O_RDWR | O_BINARY);
 		if (handle < 0) return redir_xlt_err();
 
@@ -760,7 +773,7 @@ cpm_word fcb_chmod(cpm_byte *fcb, cpm_byte *dma)
 		}
 		else if (newoffs < st.st_size)
 		{
-#ifndef WIN32		/* XXX Do this somehow in Win32 */
+#if !defined(WIN32) || defined(__CYGWIN__)		/* XXX Do this somehow in Win32 */
 			if (ftruncate(handle, newoffs))
 			{
 				close(handle);
